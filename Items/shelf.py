@@ -3,21 +3,16 @@ import logging
 
 class Shelf:
     def __init__(self, name: str, size: int, inside = []):
-        super().__init__()
+        self.name = name
         self.size = size
         self.inside = inside
-        self.name = name
         self.free_place = size
 
-    def what_in(self):
-        suma = 0
-        for i in self.inside:
-            suma += i["many"]
-        self.free_place = self.size - suma
+    def what_in_shelf(self):
         logging.info("НА полка %s находиться : %s ; "
                      "свободного места %s", self.name, self.inside, self.free_place)
 
-    def what_in(self):
+    def what_in_for_work(self):
         item_name = []
         for item_in in self.inside:
             item_name.append(item_in['name'])
@@ -54,7 +49,7 @@ class Shelf:
         self.free_place += item["many"]
 
     def take(self, item):
-        if item['name'] in self.what_in():
+        if item['name'] in self.what_in_for_work():
             for item_in in self.inside:
                 if item["name"] == item_in["name"]:
                     if item["many"] == item_in["many"]:
