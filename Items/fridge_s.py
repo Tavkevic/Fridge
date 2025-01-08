@@ -3,8 +3,9 @@ from shelf import Shelf
 
 
 class Fridge:
-    def __init__(self):
+    def __init__(self, name = None):
         self.shelfs = []
+        self.name = name
 
     def app_shelf(self, shelf: Shelf):
         if not (shelf in self.shelfs):
@@ -36,10 +37,9 @@ class Fridge:
     def shelf_in_fridge(self):
         if not self.shelfs:
             logging.info("В холодильнике нет полок")
-            return
 
         for shelf in self.shelfs:
-            shelf.what_in()
+            shelf.what_in_shelf()
 
     def takes(self, item):
         shelf_with_item = []
