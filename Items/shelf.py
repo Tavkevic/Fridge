@@ -8,6 +8,9 @@ class Shelf:
         self.inside = inside
         self.free_place = size
 
+    def shelf(self):
+        return {"name": self.name, "size": self.size, "inside": self.inside, "free_place": self.free_place}
+
     def what_in_shelf(self):
         logging.info("НА полка %s находиться : %s ; "
                      "свободного места %s", self.name, self.inside, self.free_place)

@@ -1,28 +1,28 @@
 import logging
-from shelf import Shelf
+from Items.shelf import Shelf
 
 
 class Fridge:
     def __init__(self, name = None):
         self.shelfs = []
-        self.name = name
+        self.name = "Холодильник - " + name
 
     def app_shelf(self, shelf: Shelf):
         if not (shelf in self.shelfs):
             self.shelfs.append(shelf)
             if shelf.inside:
-                logging.info("Создали полку %s с обемом в %s предмета, на полке уже есть %s", shelf.name, shelf.size, shelf.inside)
-            logging.info("Создали полку %s с обемом в %s предмета", shelf.name, shelf.size)
+                logging.info("Создали полку %s с объемом в %s предмета, на полке уже есть %s", shelf.name, shelf.size, shelf.inside)
+            logging.info("Создали полку %s с объемом в %s предмета", shelf.name, shelf.size)
         else:
-            logging.info("Полка с названием %s сушествует", shelf.name)
+            logging.info("Полка с названием %s существует", shelf.name)
 
     def create_shelf(self, name, size):
         shelf = Shelf(name, size)
         if not (shelf in self.shelfs):
             self.shelfs.append(shelf)
-            logging.info("Создали полку %s с обемом в %s предмета", name, size)
+            logging.info("Создали полку %s с объемом в %s предмета", name, size)
         else:
-            logging.info("Полка с названием %s сушествует", name)
+            logging.info("Полка с названием %s существует", name)
 
     def delete_shelf(self, name):
         flag = False

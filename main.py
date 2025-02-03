@@ -1,13 +1,18 @@
 import logging
 import sys
 
-from item.fridge_s import Fridge
+from Items.fridge_s import Fridge
 logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+                    format=" %(message)s "
+                           "\n %(asctime)s - %(levelname)s ")
 
-fridge = Fridge()
+
 
 if __name__ == "__main__":
+    logging.info("Напиши имя холодильника: ")
+    name = str(input())
+    fridge = Fridge(name)
+
     while True:
         logging.info("Что хотите сделать?"
                      "\n 1 - добавить_полку"

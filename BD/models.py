@@ -1,35 +1,37 @@
-from ctypes import ARRAY
-from tokenize import String
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
-import sqlalchemy as sa
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship
-
-# Создаем базовый класс для модели
 Base = declarative_base()
 
-
-# Определяем модель таблицы 'data'
 class Fridge(Base):
-    __tablename__ = 'Fridge'
+    __tablename__ = 'Fridges'
 
-    id = sa.Column(sa.Integer, primary_key=True)
-    name = sa.Column(sa.String, nullable=False)
-    shelfs = relationship('Shelfs', back_populates = 'fridge', cascade='all, delete-orphan')
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
 
-    def __repr__(self):
-        return f"id={self.id}, name='{self.name}'"
+    shelves = relationship("Shelf", back_populates="fridge", cascade="all, delete-orphan")
 
-class Shelfs(Base):
-    __tablename__ = 'Shelfs'
 
-    id = sa.Column(sa.Integer, primary_key=True)
-    name = sa.Column(sa.String, primary_key=False)
-    size = sa.Column(sa.Integer, primary_key=False)
-    inside = sa.Column(ARRAY(String))
-    free_place = sa.Column(sa.Integer, primary_key=False)
-    fridge = relationship('Fridge', back_populates='shelfs')
+class Shelf(Base):
+    __tablename__ = 'Shelves'
 
-    def __repr__(self):
-        return (f"id = {self.id}, name = {self.name}, "
-                f"size = {self.size}, inside = {self.inside}, "
-                f"free_place ={self.free_place}")
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    fridges_id = Column(Integer, ForeignKey('Fridges.id', ondelete='CASCADE'), nullable=False)
+    name = Column(String, nullable=False)
+    size = Column(Integer, nullable=False)
+    free_place = Column(Integer, nullable=False)
+
+    fridge = relationship("Fridge", back_populates="shelves")
+    products = relationship("Product", back_populates="shelf", cascade="all, delete-orphan")
+
+
+class Product(Base):
+    __tablename__ = 'Product'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    shelves_id = Column(Integer, ForeignKey('Shelves.id', ondelete='CASCADE'), nullable=False)
+    name = Column(String, nullable=False)
+    many = Column(Integer, nullable=False)
+
+    shelf = relationship("Shelf", back_populates="products")

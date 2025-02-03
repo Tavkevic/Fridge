@@ -9,7 +9,10 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 def  upgrade() -> None:
-    """Создает таблицы Fridges, Shelfs и Review с каскадным удалением"""
+    """
+    Создает таблицы Fridges, Shelves и Review с каскадным удалением
+    """
+
     op.create_table(
         'Fridges',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -17,40 +20,33 @@ def  upgrade() -> None:
         sa.PrimaryKeyConstraint('id')
     )
 
-    # Создаем таблицу Shelfs
     op.create_table(
-        'Shelfs',
-        sa.Column('id', sa.Integer(), nullable=False),  # Столбец id
-        sa.Column('name', sa.String(), nullable=False),  # Имя категории
-
-        sa.PrimaryKeyConstraint('id')  # Определяем первичный ключ
+        'Shelves',
+        sa.Column('id', sa.Integer(), nullable=False),
+        sa.Column('fridges_id', sa.Integer, nullable=False),
+        sa.Column('name', sa.String(), nullable=False),
+        sa.Column('size', sa.Integer(), nullable=False),
+        sa.Column('free_place', sa.Integer(), nullable=False),
+        sa.ForeignKeyConstraint(['fridges_id'], ['Fridges.id'], ondelete='CASCADE'),
+        sa.PrimaryKeyConstraint('id')
     )
 
-    # Создаем таблицу Product
     op.create_table(
         'Product',
-        sa.Column('id', sa.Integer(), nullable=False),  # Столбец id продукта
-        sa.Column('category_id', sa.Integer(), nullable=False),  # Внешний ключ на Category
-        sa.Column('name', sa.String(), nullable=False),  # Имя продукта
-        sa.ForeignKeyConstraint(['category_id'], ['Category.id'], ondelete='CASCADE'),
-        # Внешний ключ с каскадным удалением
-        sa.PrimaryKeyConstraint('id')  # Определяем первичный ключ
-    )
-
-    # Создаем таблицу Review
-    op.create_table(
-        'Review',
-        sa.Column('id', sa.Integer(), nullable=False),  # Столбец id отзыва
-        sa.Column('product_id', sa.Integer(), nullable=False),  # Внешний ключ на Product
-        sa.Column('content', sa.Text(), nullable=False),  # Содержимое отзыва
-        sa.ForeignKeyConstraint(['product_id'], ['Product.id'], ondelete='CASCADE'),
-        # Внешний ключ с каскадным удалением
-        sa.PrimaryKeyConstraint('id')  # Определяем первичный ключ
+        sa.Column('id', sa.Integer(), nullable=False),
+        sa.Column('shelves_id', sa.Integer(), nullable=False),
+        sa.Column('name', sa.String(), nullable=False),
+        sa.Column('many', sa.Integer(), nullable=False),
+        sa.ForeignKeyConstraint(['shelves_id'], ['Shelves.id'], ondelete='CASCADE'),
+        sa.PrimaryKeyConstraint('id')
     )
 
 
 def downgrade() -> None:
-    """Удаляет таблицы Review, Product и Category"""
-    op.drop_table('Review')  # Удаляем таблицу Review
-    op.drop_table('Product')  # Удаляем таблицу Product
-    op.drop_table('Category')  # Удаляем таблицу Category
+    """
+    Удаляет таблицы Fridges, Product и Shelves
+    """
+
+    op.drop_table('Fridges')
+    op.drop_table('Product')
+    op.drop_table('Shelves')
